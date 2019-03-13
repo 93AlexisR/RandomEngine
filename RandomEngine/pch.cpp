@@ -48,7 +48,7 @@ const bool isAlphaNumStrict(const std::string& testString) { //returns true if c
 
 
 
-MyRand::MyRand(void) {
+RandEngine::RandEngine(void) {
 	unsigned int i = 4000000000;
 	unsigned int b;
 	while (true) {//test to find largest unsigned int-ish
@@ -61,13 +61,13 @@ MyRand::MyRand(void) {
 	}
 }
 
-MyRand::MyRand(unsigned int customSeed) 
+RandEngine::RandEngine(unsigned int customSeed) 
 	: theSeed(customSeed){
-	MyRand();
+	RandEngine();
 }
 
 
-unsigned int MyRand::trueRand(void) {
+unsigned int RandEngine::trueRand(void) {
 	while (theSeed > 10000) {
 		theSeed /= 9;
 	}
@@ -75,12 +75,12 @@ unsigned int MyRand::trueRand(void) {
 	return theSeed;
 }
 
-bool MyRand::fiftyFifty(void) {
+bool RandEngine::fiftyFifty(void) {
 	return static_cast<bool>(trueRand()%2);
 }
 
-void MyRand::trueTest(void) {
-	MyRand myEngine;
+void RandEngine::trueTest(void) {
+	RandEngine myEngine;
 	unsigned int trueCounter{ 0 };
 	unsigned int falseCounter{ 0 };
 	for (unsigned int i = 0; i < 546; i++) {
@@ -98,5 +98,42 @@ void MyRand::trueTest(void) {
 		<< "ratio false to true is: " << ratio << std::endl;
 }
 
+unsigned int RandEngine::randRange(unsigned int lowerBound, unsigned int upperBound) {
+	unsigned int range = upperBound - lowerBound;
+	return lowerBound + trueRand() % ++range;
+}
+
+void RandEngine::rangeTest(void) {
+	RandEngine tempEngine;
+	unsigned int frequencyCount[5] = { 0,0,0,0,0 };
+	for (unsigned int i = 0; i < 1000000; i++) {
+		switch (tempEngine.myRand(5)) {
+		case 1:
+			frequencyCount[0]++;
+			break;
+		case 2:
+			frequencyCount[1]++;
+			break;
+		case 3:
+			frequencyCount[2]++;
+			break;
+		case 4:
+			frequencyCount[3]++;
+			break;
+		case 5:
+			frequencyCount[4]++;
+			break;
+		default:
+			break;
+		}
+	}
+	for (unsigned int v = 0; v < 5; v++) {
+		std::cout << "Frequency of " << v+1 << ": " << frequencyCount[v] << " ("
+			<< 100.0 * static_cast<double>(frequencyCount[v]) /
+			static_cast<double>((frequencyCount[0] + frequencyCount[1]
+				+ frequencyCount[2] + frequencyCount[3]
+				+ frequencyCount[4])) << "%)" << std::endl;
+	}
+}
 
 // In general, ignore this file, but keep it around if you are using pre-compiled headers.

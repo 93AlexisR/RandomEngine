@@ -9,9 +9,9 @@ using namespace std;
 
 int main()
 {
-	MyRand myEngine(1);
-
-	return 0;
+	RandEngine myEngine(123149);
+	myEngine.rangeTest(); 
+	return 1;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
