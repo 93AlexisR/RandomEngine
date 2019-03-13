@@ -1,26 +1,92 @@
-// RandomEngine.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
+#include "RandomEngine.h"
 #include "pch.h"
-using namespace std;
 
 
 
-
-
-int main()
-{
-	RandEngine myEngine(123149);
-	myEngine.rangeTest(); 
-	return 1;
+RandEngine::RandEngine(void) {
+	unsigned int i = 4000000000;
+	unsigned int b;
+	while (true) {//test to find largest unsigned int-ish
+		b = i;
+		i += 1111;
+		if (i < b) {
+			unsignedLimit = b / 2;
+			break;
+		}
+	}
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
+RandEngine::RandEngine(unsigned int customSeed)
+	: theSeed(customSeed) {
+	RandEngine();
+}
 
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
+
+unsigned int RandEngine::trueRand(void) {
+	while (theSeed > 10000) {
+		theSeed /= 9;
+	}
+	theSeed *= 11111 % unsignedLimit;
+	return theSeed;
+}
+
+bool RandEngine::fiftyFifty(void) {
+	return static_cast<bool>(trueRand() % 2);
+}
+
+void RandEngine::trueTest(void) {
+	RandEngine myEngine;
+	unsigned int trueCounter{ 0 };
+	unsigned int falseCounter{ 0 };
+	for (unsigned int i = 0; i < 546; i++) {
+		if (myEngine.fiftyFifty()) {
+			trueCounter++;
+		}
+		else {
+			falseCounter++;
+		}
+	}
+
+	long double ratio = static_cast<long double>(trueCounter) / static_cast<long double>(falseCounter);
+	std::cout << "falseCounter: " << falseCounter << std::endl
+		<< "trueCounter: " << trueCounter << std::endl
+		<< "ratio false to true is: " << ratio << std::endl;
+}
+
+unsigned int RandEngine::randRange(unsigned int lowerBound, unsigned int upperBound) {
+	unsigned int range = upperBound - lowerBound;
+	return lowerBound + trueRand() % ++range;
+}
+
+void RandEngine::rangeTest(void) {
+	RandEngine tempEngine;
+	unsigned int frequencyCount[5] = { 0,0,0,0,0 };
+	for (unsigned int i = 0; i < 1000000; i++) {
+		switch (tempEngine.myRand(5)) {
+		case 1:
+			frequencyCount[0]++;
+			break;
+		case 2:
+			frequencyCount[1]++;
+			break;
+		case 3:
+			frequencyCount[2]++;
+			break;
+		case 4:
+			frequencyCount[3]++;
+			break;
+		case 5:
+			frequencyCount[4]++;
+			break;
+		default:
+			break;
+		}
+	}
+	for (unsigned int v = 0; v < 5; v++) {
+		std::cout << "Frequency of " << v + 1 << ": " << frequencyCount[v] << " ("
+			<< 100.0 * static_cast<double>(frequencyCount[v]) /
+			static_cast<double>((frequencyCount[0] + frequencyCount[1]
+				+ frequencyCount[2] + frequencyCount[3]
+				+ frequencyCount[4])) << "%)" << std::endl;
+	}
+}
