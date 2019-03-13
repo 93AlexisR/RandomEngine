@@ -9,7 +9,8 @@ using namespace std;
 
 int main()
 {
-	trueTest();
+	MyRand myEngine(1);
+
 	return 0;
 }
 

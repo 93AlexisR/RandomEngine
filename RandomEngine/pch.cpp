@@ -71,7 +71,7 @@ unsigned int MyRand::trueRand(void) {
 	while (theSeed > 10000) {
 		theSeed /= 9;
 	}
-	theSeed *= 97531 % unsignedLimit;
+	theSeed *= 11111 % unsignedLimit;
 	return theSeed;
 }
 
@@ -79,12 +79,11 @@ bool MyRand::fiftyFifty(void) {
 	return static_cast<bool>(trueRand()%2);
 }
 
-
-void trueTest(void) {
+void MyRand::trueTest(void) {
 	MyRand myEngine;
 	unsigned int trueCounter{ 0 };
 	unsigned int falseCounter{ 0 };
-	for (unsigned int i = 0; i < 3454546; i++) {
+	for (unsigned int i = 0; i < 546; i++) {
 		if (myEngine.fiftyFifty()) {
 			trueCounter++;
 		}
@@ -98,5 +97,6 @@ void trueTest(void) {
 		<< "trueCounter: " << trueCounter << std::endl
 		<< "ratio false to true is: " << ratio << std::endl;
 }
+
 
 // In general, ignore this file, but keep it around if you are using pre-compiled headers.

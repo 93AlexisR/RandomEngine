@@ -31,7 +31,7 @@ const bool isAlphaNumStrict(const std::string&); //returns true if contains Alph
 
 class MyRand {
 private:
-	unsigned int theSeed = static_cast<unsigned int>(time(NULL));
+	unsigned int theSeed;
 	unsigned int unsignedLimit;
 
 public:
@@ -39,7 +39,7 @@ public:
 	MyRand(unsigned int customSeed);
 	unsigned int trueRand(void);
 	bool fiftyFifty(void);
-
+	static void trueTest(void);
 };
 
 
